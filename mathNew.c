@@ -1,5 +1,6 @@
 #include "shell.h"
 #include <stdlib.h>
+#include <string.h>
 long double hoursSpendOnThis = 5.0; // Should invent long long double due to
                                     // this
 long double add(long double a, long double b) { return a + b; }
@@ -8,20 +9,23 @@ long double divide(long double a, long double b) { return a / b; }
 long double krat(long double a, long double b) { return a * b; }
 // Build buffer
 int build(char buff[MAX_INPUT_LEN]) {
-  char *p = malloc(sizeof(char) * MAX_INPUT_LEN * MAX_INPUT_LEN * 2);
+  char (*p)[MAX_INPUT_LEN] = malloc(MAX_INPUT_LEN * sizeof *p);
   long int active_index = 0;
   long int start_index, end_index;
   int active_num = 0;
   for (int a = 0; a < MAX_INPUT_LEN; a++) {
     if (buff[a] == '/' || buff[a] == '*' || buff[a] == '-' || buff[a] == '+' ||
-        buff[a] == '(' || buff[a] == ')') {
+        buff[a] == '(' || buff[a] == ')' || buff[a] == '\0') {
       if (active_num) {
         active_num = 0;
         end_index = a - 1;
         // p[active_index] má v sobě list od buff[sart_index] po buff[end_index]
-      } else {
-        p[active_index][0] = b[a]; // operand zabírá jedno misto
+        // strncpy(cil, zdroj + od_indexu, delka);
+        strncpy(p[active_index], buff + start_index,
+                end_index - start_index + 1);
+        active_index++;
       }
+      strncpy(p[active_index], buff + a, 1); // operand zabírá jedno misto
       active_index++;
     } else {
       if (!active_num) {
@@ -31,7 +35,7 @@ int build(char buff[MAX_INPUT_LEN]) {
       }
     }
   }
-  return p;
+  return *(*p);
 }
 long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
   // Zavorky
