@@ -1,9 +1,7 @@
 #include "math.h"
-#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-extern int MAX_INPUT_LEN = 1024;
 int main(int argc, char *argv[]) {
   while (1) {
     printf("> ");

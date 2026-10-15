@@ -1,4 +1,4 @@
-#include "main.h"
+#include "shell.h"
 #include <string.h>
 #define smycka for (int a = 0; a < MAX_INPUT_LEN; a++)
 #define operator                                                               \
@@ -8,13 +8,34 @@ long double add(long double a, long double b) { return a + b; }
 long double minus(long double a, long double b) { return a - b; }
 long double divide(long double a, long double b) { return a / b; }
 long double krat(long double a, long double b) { return a * b; }
-long long int eval(char buff[MAX_INPUT_LEN], int expression_count) {
+int count_expression(char buff[MAX_INPUT_LEN]) {
+  int oper = 0;
   smycka {
     char i = buff[a];
-    if (expression_count > 2) {
-      operator { eval(buff, expression_count - 1); }
-      else {
-        buff[a] = '\0';
+    operator { oper++; }
+  }
+  return oper;
+}
+long double eval(char buff[MAX_INPUT_LEN], int expression_count) {
+  smycka {
+    char old_buff_left[MAX_INPUT_LEN];
+    char i = buff[a];
+    old_buff_left[a] = i;
+    if (expression_count >= 2) {
+      buff[a] = '\0'; // smazat druhou zavorku kdyztak
+      operator {
+        long double vyslede = eval(buff, expression_count - 1);
+        char retezec[64]; // Velikost 12 stačí pro jakékoli 32-bitové int včetně
+                          // znaménka a \0
+
+        sprintf(retezec, "%Lf", vyslede);
+        for (int b = a; b < MAX_INPUT_LEN; b++) {
+          if (retezec[b - a] == '\0') {
+            break;
+          }
+          old_buff_left[b] = retezec[b - a];
+        }
+        eval(old_buff_left, count_expression(old_buff_left));
       }
     } else {
       operator {
