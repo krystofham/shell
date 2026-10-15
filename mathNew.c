@@ -1,14 +1,15 @@
 #include "shell.h"
 #include <stdlib.h>
 #include <string.h>
-long double hoursSpendOnThis = 5.0; // Should invent long long double due to
+long double hoursSpendOnThis = 6.0; // Should invent long long double due to
                                     // this
 long double add(long double a, long double b) { return a + b; }
 long double minus(long double a, long double b) { return a - b; }
 long double divide(long double a, long double b) { return a / b; }
 long double krat(long double a, long double b) { return a * b; }
 // Build buffer
-int build(char buff[MAX_INPUT_LEN]) {
+// CHybí testy pro build
+char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
   char (*p)[MAX_INPUT_LEN] = malloc(MAX_INPUT_LEN * sizeof *p);
   long int active_index = 0;
   long int start_index, end_index;
@@ -35,9 +36,8 @@ int build(char buff[MAX_INPUT_LEN]) {
       }
     }
   }
-  return *(*p);
-}
-long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
+  return p;
+} long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
   // Zavorky
   int zavorka_count = 0;
   for (int a = 0; a < MAX_INPUT_LEN; a++) {
