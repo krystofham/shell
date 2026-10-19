@@ -1,1 +1,14 @@
 Shell, co najde jazyk (např. init), na zakládě toho udělá testy, commity, buildí, diagnosuje, udělá dependency graph, analyzuje chyby ap., vlastní testy syntax
+dev
+> build tex main.tex
+Procházím soubory
+Doplnuju makra
+Která soutěž?
+> MO
+Která událost?
+> Domácí kolo
+Beru prefix...
+Doplnuju tvuj tex
+Doplnuju makra
+sposutim pdflatex
+HOTOVO!
