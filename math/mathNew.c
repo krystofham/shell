@@ -1,8 +1,8 @@
-#include "../shell.h"
+#define MAX_INPUT_LEN 1024
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-long double hoursSpendOnThis = 7.5; // Should invent long long double due to
+long double hoursSpendOnThis = 9; // Should invent long long double due to
                                     // this
 long double add(long double a, long double b) { return a + b; }
 long double minus(long double a, long double b) { return a - b; }
@@ -39,7 +39,7 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
   }
   return p;
 }
-// SEM TO NEJAK FUNGUJE, NESAHAT
+// SEM TO NEJAK FUNGUJE, NESAHAT 
 
 long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
   // Zavorky
@@ -75,6 +75,7 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
           // Dopsat do buffu vysledek
           char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN];
           int index = 0;
+          // Zapiseme novy buffer do ktereho vblozime misto zavorek vysledek 
           for (int i = 0; i < MAX_INPUT_LEN; i++) {
             if (i < start_index) {
               strcpy(new_buff_after_vysledek[index], buff[i]);
@@ -88,6 +89,7 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
             }
             index++;
           }
+          // Prepiseme buffer aby to fungovalo dale
           for (int i = 0; i < MAX_INPUT_LEN; i++) {
             strcpy(buff[i], new_buff_after_vysledek[i]);
           }
@@ -95,46 +97,91 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
         }
       }
     }
-    // TADY TO MOZNA TROCHU FACHA POD TIM JE TO COOKED
+    // TADY TO MOZNA TROCHU FACHA POD TIM JE TO COOKED - pod tim delane v hdoine
     // Nasobeni
     zavorka_count = 0;
     for (int a = 0; a < MAX_INPUT_LEN; a++) {
-      if (buff[a] == '*' || buff[a] == '/') {
+      if (strcmp(buff[a], "*") || strcmp(buff[a], "/")) {
         zavorka_count++;
       }
     }
     while (zavorka_count != 0) {
       for (int a = 0; a < MAX_INPUT_LEN; a++) {
-        if (buff[a] == '*') {
+        if (strcmp(buff[a], "*")) {
           long double vysledek =
-              krat(strtold(buff[a - 1]), strtold(buff[a + 1]));
+              krat(strtold(buff[a - 1], NULL), strtold(buff[a + 1], NULL));
           // Zapsat do buffu
-        } else if (buff[a] == '/') {
+          char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN] = {0};
+          for (int i = 0; i < MAX_INPUT_LEN; i++) {
+            if (i < (a -1) ){
+              strcpy(new_buff_after_vysledek[i], buff[i]);
+            } else if (i == (a-1)){
+              sprintf(new_buff_after_vysledek[i], "%Lf", vysledek);
+            } else {
+              strcpy(new_buff_after_vysledek[i], buff[i+2]); // +2 protoze vysledek operace ma 3 mista v bufferu
+            }
+          }
+
+        } else if (strcmp(buff[a], "/")) {
           long double vysledek =
-              divide(strtold(buff[a - 1]), strtold(buff[a + 1]));
+              divide(strtold(buff[a - 1], NULL), strtold(buff[a + 1], NULL));
           // Zapsat do buffu
+          char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN] = {0};
+          for (int i = 0; i < MAX_INPUT_LEN; i++) {
+            if (i < (a -1) ){
+              strcpy(new_buff_after_vysledek[i], buff[i]);
+            } else if (i == (a-1)){
+              sprintf(new_buff_after_vysledek[i], "%Lf", vysledek);
+            } else {
+              strcpy(new_buff_after_vysledek[i], buff[i+2]); // +2 protoze vysledek operace ma 3 mista v bufferu
+            }
+          }
         }
       }
     }
     // Scitani
     zavorka_count = 0;
     for (int a = 0; a < MAX_INPUT_LEN; a++) {
-      if (buff[a] == '+' || buff[a] == '-') {
+      if (strcmp(buff[a], "+") || strcmp(buff[a], "-")) {
         zavorka_count++;
       }
     }
     while (zavorka_count != 0) {
       for (int a = 0; a < MAX_INPUT_LEN; a++) {
-        if (buff[a] == '+') {
+        if (strcmp(buff[a], "+")) {
           long double vysledek =
-              add(strtold(buff[a - 1]), strtold(buff[a + 1]));
+              add(strtold(buff[a - 1], NULL), strtold(buff[a + 1], NULL));
           // Zapsat do buffu
-        } else if (buff[a] == '-') {
+          char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN] = {0};
+          for (int i = 0; i < MAX_INPUT_LEN; i++) {
+            if (i < (a -1) ){
+              strcpy(new_buff_after_vysledek[i], buff[i]);
+            } else if (i == (a-1)){
+              sprintf(new_buff_after_vysledek[i], "%Lf", vysledek);
+            } else {
+              strcpy(new_buff_after_vysledek[i], buff[i+2]); // +2 protoze vysledek operace ma 3 mista v bufferu
+            }
+          }
+        } else if (strcmp(buff[a], "-")) {
           long double vysledek =
-              minus(strtold(buff[a - 1]), strtold(buff[a + 1]));
+              minus(strtold(buff[a - 1], NULL), strtold(buff[a + 1], NULL));
           // Zapsat do buffu
+          char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN] = {0};
+          for (int i = 0; i < MAX_INPUT_LEN; i++) {
+            if (i < (a -1) ){
+              strcpy(new_buff_after_vysledek[i], buff[i]);
+            } else if (i == (a-1)){
+              sprintf(new_buff_after_vysledek[i], "%Lf", vysledek);
+            } else {
+              strcpy(new_buff_after_vysledek[i], buff[i+2]); // +2 protoze vysledek operace ma 3 mista v bufferu
+            }
+          }
         }
       }
     }
   }
+  return strtold(buff[0], NULL);
 }
+// Chybí část pro doplnění typu 2(2+3)
+// CHybí funkce pro dosazení do rovnice 2(3+5) -> 4x+6/8 // napsat v rustu?? 
+// Chybí minus -3+5(-5+9) - asi udelat tak ze pred to dam 0
