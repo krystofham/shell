@@ -1,30 +1,46 @@
-#include "math.h"
+#include "shell.h"
+#include "math/math.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-int main(int argc, char *argv[]) {
+int main() {
   while (1) {
     printf("> ");
     fflush(stdout);
     char input[MAX_INPUT_LEN];
     if (fgets(input, MAX_INPUT_LEN, stdin) == NULL) {
-      perror("fgets failed");
+      perror("fgets failed\n");
       continue;
     }
-    if (strcmp(input, "exit\n")) {
+    if (strcmp(input, "exit\n") == 0) {
+      printf("strcmp");
       return 0;
     }
-    for (int a; a < MAX_INPUT_LEN; a++) {
+    int mathOn = 0;
+    for (int a = 0; a < MAX_INPUT_LEN; a++) {
       char i = input[a];
       // MATH OPERATIONES
-      if ((i == '+' || i == '-' || i == '*' || i == '/') &&) {
-        math(input);
+      if (input[0] == 'm') {
+        // math
+        for (int b = 0; b < MAX_INPUT_LEN - 1; b++) {
+          if (b == 0) {
+            continue;
+          } else {
+            input[b - 1] = input[b];
+          }
+        }
+        mathOn = 1;
+        break;
       }
-      if (i = '') {
+      if (i == '\0') {
         break;
       }
     }
-
-    system(input);
+    if (mathOn) {
+      math(input);
+    } else {
+      system(input);
+    }
   }
+  return 0;
 }

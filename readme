@@ -12,3 +12,4 @@ Doplnuju tvuj tex
 Doplnuju makra
 sposutim pdflatex
 HOTOVO!
+echo -n "aa" | xclip -selection clipboard
