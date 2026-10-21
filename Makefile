@@ -16,6 +16,8 @@ run: all
 test:
 	$(CC) tests/test.c math/math.c -o test
 	./test
+	rm -f test
+
 
 debug:
 	$(CC) -Wall -Wextra -Werror -g3 -O3 -fsanitize=address,undefined $(SRC) -o $(TARGET)

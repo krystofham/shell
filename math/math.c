@@ -49,10 +49,6 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
 long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
   // Zavorky
   int zavorka_count = 0;
-  printf("Zavorky \n");
-  for (int i = 0; i < 10; i++) {
-    printf("%d - %s\n", i, buff[i]);
-  }
   for (int a = 0; a < MAX_INPUT_LEN; a++) {
     for (int b = 0; b < MAX_INPUT_LEN; b++) {
       if (buff[a][b] == '(') {
@@ -65,7 +61,6 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
   // Jdeme po závorkách a rekurzivně zmenšuju výraz
   int start_index = 0, end_index;
   while (zavorka_count != 0) {
-    printf("Zavorky ON \n");
     for (int a = 0; a < MAX_INPUT_LEN; a++) {
       for (int b = 0; b < MAX_INPUT_LEN; b++) {
         if (buff[a][b] == '\0') {
@@ -87,18 +82,12 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
             strcpy(bu[j], buff[i]);
             j++;
           }
-          for (int i = 0; i < 10; i++) {
-            printf("%d - %s\n", i, bu[i]);
-          }
           long double vysledek = eval(bu);
           // Dopsat do buffu vysledek
           char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN] = {0};
           int index = 0;
           // Zapiseme novy buffer do ktereho vblozime misto zavorek vysledek
           for (int i = 0; i < MAX_INPUT_LEN; i++) {
-            if (i != 0) {
-              printf("%s", new_buff_after_vysledek[i - 1]);
-            }
             if (i < start_index) {
               strcpy(new_buff_after_vysledek[index], buff[i]);
             } else if (i == start_index) {
@@ -131,7 +120,6 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
     }
   }
   while (zavorka_count != 0) {
-    printf("Nasobeni ON \n");
     for (int a = 0; a < MAX_INPUT_LEN - 2; a++) {
       if (strcmp(buff[a], "*") == 0) {
         long double vysledek =
