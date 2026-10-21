@@ -39,7 +39,10 @@ int main() {
     if (mathOn) {
       math(input);
     } else {
-      system(input);
+      int a = system(input);
+      if (a == -1) {
+        perror("system");
+      }
     }
   }
   return 0;
