@@ -6,6 +6,17 @@ long double add(long double a, long double b) { return a + b; }
 long double minus(long double a, long double b) { return a - b; }
 long double divide(long double a, long double b) { return a / b; }
 long double krat(long double a, long double b) { return a * b; }
+long double na(long double a, long double b) {
+  long double c = 1;
+  for (long double i = 0; i < (b > 0 ? b : (-b)); i++) {
+    if (b > 0) {
+      c = c * a;
+    } else {
+      c = c / a;
+    }
+  }
+  return c;
+}
 // Build buffer
 // CHybí testy pro build
 long double math(char buff[MAX_INPUT_LEN]) {
@@ -22,7 +33,7 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
   int active_num = 0;
   for (int a = 0; a < MAX_INPUT_LEN; a++) {
     if (buff[a] == '/' || buff[a] == '*' || buff[a] == '-' || buff[a] == '+' ||
-        buff[a] == '(' || buff[a] == ')' || buff[a] == '\0') {
+        buff[a] == '(' || buff[a] == ')' || buff[a] == '^' || buff[a] == '\0') {
       if (active_num) {
         active_num = 0;
         end_index = a - 1;
@@ -115,7 +126,8 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
   // Nasobeni
   zavorka_count = 0;
   for (int a = 0; a < MAX_INPUT_LEN; a++) {
-    if (strcmp(buff[a], "*") == 0 || strcmp(buff[a], "/") == 0) {
+    if (strcmp(buff[a], "*") == 0 || strcmp(buff[a], "^") == 0 ||
+        strcmp(buff[a], "/") == 0) {
       zavorka_count++;
     }
   }
@@ -124,6 +136,27 @@ long double eval(char buff[MAX_INPUT_LEN][MAX_INPUT_LEN]) {
       if (strcmp(buff[a], "*") == 0) {
         long double vysledek =
             krat(strtold(buff[a - 1], NULL), strtold(buff[a + 1], NULL));
+        // Zapsat do buffu
+        char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN] = {0};
+        for (int i = 0; i < MAX_INPUT_LEN - 2; i++) {
+          if (i < (a - 1)) {
+            strcpy(new_buff_after_vysledek[i], buff[i]);
+          } else if (i == (a - 1)) {
+            sprintf(new_buff_after_vysledek[i], "%Lf", vysledek);
+          } else {
+            strcpy(new_buff_after_vysledek[i],
+                   buff[i + 2]); // +2 protoze vysledek operace ma 3 mista v
+                                 // bufferu
+          }
+        }
+        for (int i = 0; i < MAX_INPUT_LEN - 2; i++) {
+          strcpy(buff[i], new_buff_after_vysledek[i]);
+        }
+        zavorka_count--;
+        a = 0;
+      } else if (strcmp(buff[a], "^") == 0) {
+        long double vysledek =
+            na(strtold(buff[a - 1], NULL), strtold(buff[a + 1], NULL));
         // Zapsat do buffu
         char new_buff_after_vysledek[MAX_INPUT_LEN][MAX_INPUT_LEN] = {0};
         for (int i = 0; i < MAX_INPUT_LEN - 2; i++) {

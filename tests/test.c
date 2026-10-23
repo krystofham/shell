@@ -14,6 +14,12 @@ int main() {
   // divide
   assert(divide(6, 3) == 2);
   assert(divide(4, -2) == -2);
+  // na
+  assert(na(2, 3) == 8);
+  assert(na(3, 2) == 9);
+  assert(na(2, -2) == divide(1, 4));
+  assert(na(-2, 3) == -8);
+  assert(na(-2, 4) == 16);
   // math
   // Jednoduché výrazy
   assert(math("2+3") == 5.0L);
