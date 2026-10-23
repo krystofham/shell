@@ -1,5 +1,7 @@
 #include "math.h"
+#include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 long double hoursSpendOnThis = 10.5; // Should invent long long double due to
                                      // this
 long double add(long double a, long double b) { return a + b; }
@@ -31,6 +33,72 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
   long int active_index = 0;
   long int start_index, end_index;
   int active_num = 0;
+  // TODO doplnit buffer q pred zacatkem psani bufferem
+  for (int i = 0; i < MAX_INPUT_LEN; i++) {
+    // *-2 -> *(0-2)
+    if (i + 1 < MAX_INPUT_LEN &&
+        (buff[i] == '^' || buff[i] == '-' || buff[i] == '+' || buff[i] == '*' ||
+         buff[i] == '/') &&
+        buff[i + 1] == '-') {
+      if (i + 5 < MAX_INPUT_LEN) {
+        char *q = calloc(MAX_INPUT_LEN, sizeof(*q));
+        q[i] = buff[i];
+        q[i + 1] = '(';
+        q[i + 2] = '0';
+        q[i + 3] = '-';
+        q[i + 4] = buff[i + 2];
+        q[i + 5] = ')';
+        for (int a = i + 6; a < MAX_INPUT_LEN; a++) {
+          q[a] = buff[a - 3];
+          if (buff[a - 3] == '\0') {
+            break;
+          }
+        }
+        strcpy(buff, q);
+        free(q);
+        i = 0;
+      } else {
+        printf("use piping etc. long buffer");
+        exit(1);
+      }
+    }
+
+    // 3(2+2) -> 3*(2+2)
+    if (i + 1 < MAX_INPUT_LEN &&
+        !(buff[i] == '^' || buff[i] == '-' || buff[i] == '+' ||
+          buff[i] == '*' || buff[i] == '/') &&
+        buff[i + 1] == '(') {
+      char *q = calloc(MAX_INPUT_LEN,
+                       sizeof(*q)); // Pred i neni definovany v zadne vetvi;
+      q[i] = '*';
+      for (int a = 2; a < MAX_INPUT_LEN - 1; a++) {
+        q[i + a] = buff[i + a - 1];
+        if (buff[i + a - 1] == '\0') {
+          break;
+        }
+      }
+      strcpy(buff, q);
+      free(q);
+      i = 0;
+    }
+    // 3**2 -> 3^2
+    if (i + 1 < MAX_INPUT_LEN && buff[i] == '*' && buff[i + 1] == '*') {
+      char *q = calloc(MAX_INPUT_LEN, sizeof(*q));
+      q[i] = '^';
+      for (int a = 1; a < MAX_INPUT_LEN; a++) {
+        q[i + a] = buff[i + a];
+        if (buff[a - 3] == '\0') {
+          break;
+        }
+      }
+      strcpy(buff, q);
+      free(q);
+      i = 0;
+    }
+    if (buff[i] == '\0') {
+      break;
+    }
+  }
   for (int a = 0; a < MAX_INPUT_LEN; a++) {
     if (buff[a] == '/' || buff[a] == '*' || buff[a] == '-' || buff[a] == '+' ||
         buff[a] == '(' || buff[a] == ')' || buff[a] == '^' || buff[a] == '\0') {
