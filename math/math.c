@@ -42,6 +42,7 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
         buff[i + 1] == '-') {
       if (i + 5 < MAX_INPUT_LEN) {
         char *q = calloc(MAX_INPUT_LEN, sizeof(*q));
+        strcpy(q, buff);
         q[i] = buff[i];
         q[i + 1] = '(';
         q[i + 2] = '0';
@@ -49,6 +50,9 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
         q[i + 4] = buff[i + 2];
         q[i + 5] = ')';
         for (int a = i + 6; a < MAX_INPUT_LEN; a++) {
+          if (a < 3) {
+            break;
+          }
           q[a] = buff[a - 3];
           if (buff[a - 3] == '\0') {
             break;
@@ -70,13 +74,18 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
         buff[i + 1] == '(') {
       char *q = calloc(MAX_INPUT_LEN,
                        sizeof(*q)); // Pred i neni definovany v zadne vetvi;
-      q[i] = '*';
+      strcpy(q, buff);
+      q[i + 1] = '*';
       for (int a = 2; a < MAX_INPUT_LEN - 1; a++) {
+        if (i + a < 1 || i + a >= MAX_INPUT_LEN) {
+          break;
+        }
         q[i + a] = buff[i + a - 1];
         if (buff[i + a - 1] == '\0') {
           break;
         }
       }
+      q[MAX_INPUT_LEN - 1] = '\0';
       strcpy(buff, q);
       free(q);
       i = 0;
@@ -84,16 +93,21 @@ char (*build(char buff[MAX_INPUT_LEN])) [MAX_INPUT_LEN] {
     // 3**2 -> 3^2
     if (i + 1 < MAX_INPUT_LEN && buff[i] == '*' && buff[i + 1] == '*') {
       char *q = calloc(MAX_INPUT_LEN, sizeof(*q));
+      strcpy(q, buff);
       q[i] = '^';
       for (int a = 1; a < MAX_INPUT_LEN; a++) {
-        q[i + a] = buff[i + a];
-        if (buff[a - 3] == '\0') {
+        if (a + i + 2 == MAX_INPUT_LEN) {
+          break;
+        }
+        q[i + a] = buff[i + a + 1];
+        if (a > 2 && buff[a - 3] == '\0') {
           break;
         }
       }
       strcpy(buff, q);
       free(q);
       i = 0;
+      printf("%s", buff);
     }
     if (buff[i] == '\0') {
       break;
